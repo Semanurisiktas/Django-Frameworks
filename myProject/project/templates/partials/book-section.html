@@ -1,0 +1,86 @@
+{% load static %}
+<!-- book section -->
+<section class="book_section layout_padding">
+  <div class="container">
+    {% if message%}
+    <div class="alert alert-success" role="alert">
+      {{ message }}
+    </div>
+    {% endif %}
+    
+    {% if error%}
+    <div class="alert alert-danger" role="alert">
+      {{ error }}
+    </div>
+    {% endif %}
+    <div class="heading_container">
+      <h2>Book A Table</h2>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form_container">
+          <form action="{% url 'book-table'%}" method="POST">
+            {% csrf_token %}
+            <div>
+              <input type="text" class="form-control" placeholder="Your Name" name="name" />
+            </div>
+            <div>
+              <input type="text" class="form-control" placeholder="Surname" name="surname" />
+            </div>
+            <div>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Phone Number"
+                name = "phoneNumber"
+              />
+            </div>
+            <div>
+              <input
+                type="email"
+                class="form-control"
+                placeholder="Your Email"
+                name = "email"
+              />
+            </div>
+            <div>
+              <select class="form-control nice-select wide" name="people">
+                <option value="" disabled selected>How many persons?</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+            </div>
+            <div>
+              <input type="date" class="form-control" name="date" id="date" />
+            </div>
+            <div>
+              <input type="time" class="form-control" name="time"  id="time" />
+            </div>
+            <div>
+              <select class="form-control nice-select wide" name="table_number" id="table">
+                <option value="" disabled selected>Table Number</option>
+                {% for table in tables %} 
+                  {% if table.is_published %}
+                    <option>{{table.tableNumber}}</option>
+                  {% endif%} 
+                {%endfor%}
+              </select>
+            </div>
+            <div class="btn_box">
+              <button type="submit">Book Now</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="map_container">
+          <div id="googleMap"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- end book section -->
+

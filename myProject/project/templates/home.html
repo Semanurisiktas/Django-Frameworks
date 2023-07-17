@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<title>{% block title %} | Home Page {% endblock title %}</title>
+
+{% block content %}
+
+<div class="hero_area">
+    <div class="bg-box">
+      <img src="{% static 'images/hero-bg.jpg' %}" alt=""/>
+    </div>
+    {% include 'partials/slider.html' %}
+  </div>
+
+  <div class="container">
+        
+    {% include 'partials/offer-section.html' %}
+</div>
+   
+<div class="container">
+    {% include 'partials/client-section.html' %}
+</div>
+{% endblock content%}

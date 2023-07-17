@@ -1,0 +1,115 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block content %}
+<section class="h-100" style="background-color: #eee;">
+    <div class="container h-100 py-5">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-10">
+  
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="fw-normal mb-0 text-black">Shopping Cart</h3>
+          </div>
+          
+          {% for item in cards %}
+          <div class="card rounded-3 mb-4">
+            <div class="card-body p-4">
+              <div class="row d-flex justify-content-between align-items-center">
+                <div class="col-md-2 col-lg-2 col-xl-2">
+                  <img
+                    src="{{item.menu.image.url}}"
+                    class="img-fluid rounded-3" alt="">
+                </div>
+                <div class="col-md-3 col-lg-3 col-xl-3">
+                  <p class="lead fw-normal mb-2">{{item.menu.name}}</p>
+                </div>
+                <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
+                  <button class="btn btn-link px-2"
+                    onclick="decreaseQuantity({{item.menu.price}},{{item.id}})">
+                    <i class="fas fa-minus"></i>
+                  </button>
+  
+                  <input id="item-quantity{{item.id}}" min="0" name="quantity"  value="{{item.quantity}}" type="number"
+                    class="form-control form-control-sm item-quantity" />
+  
+                  <button class="btn btn-link px-2"
+                    onclick="increaseQuantity({{item.menu.price}},{{item.id}})">
+                    <i class="fas fa-plus"></i>
+                  </button>
+                </div>
+                <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                  <h5 class="mb-0 " >$ <span class="item-price{{item.id}} i-price" id="item-price">{{item.price}}</span></h5>
+                </div>
+                
+                <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                  <form action="{% url 'delete-basket' item.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-link text-danger">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+          <div class="card">
+            <div class="card-body d-flex justify-content-end lead fw-normal mb-2">
+              Total Price: $<span id="total-price">{{totalPrice}}</span>
+            </div>
+          </div>
+  
+          <div class="card d-flex align-items-center justify-content-center">
+            <div class="card-body col-4">
+              <form method="GET" action="{% url 'payment' %}">
+                {% csrf_token %}
+                
+              <button type="submit" class="btn btn-warning btn-block btn-lg">Proceed to Pay</button>
+              </form>
+            </div>
+          </div>
+  
+        </div>
+      </div>
+    </div>
+  </section>
+  
+    
+{% endblock content %}
+
+{% block script %} 
+  <script >
+    // the price = quantity * price
+    function decreaseQuantity(price, id) {
+        var quantity= document.querySelector('#item-quantity'+id);
+        quantity.stepDown();
+        updatePrice(price,id);
+        totalPrice();
+    }
+
+    function increaseQuantity(price,id) {
+        var quantity= document.querySelector('#item-quantity'+id);
+        quantity.stepUp();
+        updatePrice(price,id);
+        totalPrice(); 
+    }
+
+    function updatePrice(price,id) {
+        var quantity= document.querySelector('#item-quantity'+id);
+        var itemPrice = document.querySelector('.item-price'+id);
+        itemPrice.innerHTML = quantity.value * price;
+    }   
+
+    function totalPrice(){
+      var totalPrice = document.querySelector('#total-price');
+     var itemPrices = document.querySelectorAll('.i-price');
+      // total price = sum of all item prices
+      var sum = 0;
+      for (var i = 0; i < itemPrices.length; i++) {
+        sum += parseInt(itemPrices[i].innerHTML);
+      }
+
+      totalPrice.innerHTML = sum;
+    }
+  </script>
+  {% endblock script %}

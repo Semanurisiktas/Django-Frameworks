@@ -1,0 +1,30 @@
+{% extends 'base.html' %} 
+<title>{% block title %} | Book Table {% endblock title %}</title>
+
+{% block content %} 
+{% include 'partials/book-section.html' %}
+ {% endblock content %}
+
+{% block script %}
+
+{% comment %} <script>
+// if table rezerved on this date disable select and red background
+function onloadRezervations(rezervations){
+    var date = $('#date').val();
+    var time = $('#time').val();
+    var table = $('#table').val();
+    var rezervations = rezervations;
+    
+    rezervations.map((rezervation) => {
+        if(rezervation.date == date && rezervation.time == time && rezervation.table.tableNumber == table){
+            $('#table').attr('disabled', true);
+            $('#table').css('background-color', 'red');
+        }
+    })
+
+   
+};
+
+
+</script> {% endcomment %}
+{% endblock script%}
